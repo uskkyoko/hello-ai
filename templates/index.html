@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello AI</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, html {
+    height: 100%;
+    width: 100%;
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    object-fit: cover;
+}
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+h1 {
+    font-size: 4rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 32px;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+.ai-form {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid #fff;
+    border-radius: 2em;
+    padding: 2em 2.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.1);
+    margin-bottom: 2em;
+}
+.ai-form label {
+    color: #fff;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+}
+.ai-form input[type="text"] {
+    width: 300px;
+    padding: 0.8em 1em;
+    border: none;
+    border-radius: 1.5em;
+    margin-bottom: 1em;
+    font-size: 1.1em;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+}
+.ai-form button {
+    background: #fff;
+    color: #222;
+    border: none;
+    border-radius: 2em;
+    padding: 0.7em 2em;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+.ai-form button:hover {
+    background: #f0f0f0;
+    color: #000;
+}
+.response {
+    margin-top: 1em;
+    padding: 1em;
+    border: 1px solid #fff;
+    border-radius: 1em;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    min-height: 2em;
+    width: 100%;
+    max-width: 500px;
+    word-break: break-word;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+footer {
+    color: #fff;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: 1em;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.2);
+}
+.ai-form, .response {
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="/videos/171949-846113559.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="content-wrapper">
+        <header>
+            <h1>Hello AI</h1>
+            <form class="ai-form">
+                <label for="prompt">Enter your prompt:</label><br>
+                <input type="text" id="prompt" name="prompt" required>
+                <button type="submit">Ask</button>
+            </form>
+            <div class="response"></div>
+        </header>
+        <footer>
+            <p>Copyright 2025 Hello AI</p>
+        </footer>
+    </div>
+    <script>
+        document.querySelector('.ai-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+            const responseDiv = document.querySelector('.response');
+            responseDiv.textContent = 'Thinking...';
+            const res = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ prompt })
+            });
+            const data = await res.json();
+            responseDiv.textContent = data.response;
+        });
+    </script>
+</body>
+</html>
