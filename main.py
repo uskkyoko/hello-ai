@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory="templates")
 
 app.mount("/videos", StaticFiles(directory="videos"), name="videos")
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "you api key")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.get("/", response_class=HTMLResponse)
@@ -24,7 +24,7 @@ async def ask_ai(prompt: str = Form(...)):
         "Content-Type": "application/json"
     }
     data = {
-        "model": "openai/gpt-3.5-turbo",
+        "model": "deepseek/deepseek-chat-v3.1:free",
         "messages": [
             {"role": "user", "content": prompt}
         ]
@@ -32,5 +32,6 @@ async def ask_ai(prompt: str = Form(...)):
     async with httpx.AsyncClient() as client:
         response = await client.post(OPENROUTER_API_URL, headers=headers, json=data)
         result = response.json()
+    print("OpenRouter API response:", result)  # Debug print
     ai_response = result.get("choices", [{}])[0].get("message", {}).get("content", "No response from AI.")
     return JSONResponse({"response": ai_response})
